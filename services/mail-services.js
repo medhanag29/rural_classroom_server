@@ -1,23 +1,33 @@
-import fs from "fs";
 import nodemailer from "nodemailer";
+import fs from "fs";
 
 const transporter = nodemailer.createTransport({
-  service: "Gmail",
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.EMAIL,
-    pass: process.env.PASSWORD,
+    user: process.env.BREVO_USER,
+    pass: process.env.BREVO_KEY,
   },
 });
 
-export const sendMail = async ({ to, subject, html }) =>
-  new Promise((resolve, reject) => {
-    const from = process.env.COMPANY + " <" + process.env.DISPLAY_EMAIL + ">";
-    const options = { from, to, subject, html };
-    transporter.sendMail(options, (err, info) => {
-      if (err) reject(err);
-      else resolve(info.response);
+export const sendMail = async ({ to, subject, html }) => {
+  try {
+    const from = `${process.env.SENDER_NAME} <${process.env.SENDER_EMAIL}>`;
+
+    const info = await transporter.sendMail({
+      from,
+      to,
+      subject,
+      html,
     });
-  });
+
+    return info;
+  } catch (err) {
+    console.error("Brevo OTP Error:", err);
+    throw err;
+  }
+};
 
 export const templateToHTML = (path) =>
   fs.readFileSync(path, "utf-8").toString();

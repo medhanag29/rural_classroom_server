@@ -68,6 +68,7 @@
     "qs": "^6.11.0",
     "range-parser": "^1.2.1",
     "raw-body": "^3.0.0",
+    "resend": "^6.5.2",
     "safe-buffer": "^5.2.1",
     "safer-buffer": "^2.1.2",
     "saslprep": "^1.0.3",
